@@ -16,12 +16,24 @@ public class PickupObject : TargetObject
     [Tooltip("Destroy this gameobject after collectDuration seconds")]
     public float collectDuration = 0f;
 
+    [Tooltip("Required to be picked up before")]
+    public TargetObject collectBefore;
+
     void Start() {
         Register();
     }
 
     void OnCollect()
     {
+        if (collectBefore)
+        {
+            if (collectBefore.active)
+            {
+                // exit early if previous was not collected
+                return;
+            }
+        }
+        
         if (CollectSound)
         {
             AudioUtility.CreateSFX(CollectSound, transform.position, AudioUtility.AudioGroups.Pickup, 0f);
